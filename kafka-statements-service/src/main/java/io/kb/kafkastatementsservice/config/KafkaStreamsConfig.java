@@ -34,6 +34,12 @@ public class KafkaStreamsConfig {
   @Value(value = "${spring.kafka.streams.replication-factor}")
   private String replicationFactor;
 
+  @Value(value = "${spring.kafka.streams.state.dir}")
+  private String stateDir;
+
+  @Value(value = "${spring.kafka.streams.num.standby.replicas}")
+  private String numStandByReplicas;
+
   @Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)
   KafkaStreamsConfiguration kStreamsConfig() {
     Map<String, Object> props = new HashMap<>();
@@ -42,6 +48,8 @@ public class KafkaStreamsConfig {
     props.put(GROUP_ID_CONFIG, applicationId);
     props.put(BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
     props.put(REPLICATION_FACTOR_CONFIG, replicationFactor);
+    props.put(STATE_DIR_CONFIG, stateDir);
+    props.put(NUM_STANDBY_REPLICAS_CONFIG, numStandByReplicas);
     props.put(DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
     props.put(DEFAULT_VALUE_SERDE_CLASS_CONFIG, JSONSerde.class);
     LOG.info("Kafka Streams Config is Set");

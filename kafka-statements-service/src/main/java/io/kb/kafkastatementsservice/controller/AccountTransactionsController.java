@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.kb.kafkastatementsservice.utils.Constants.STORE_NAME_ACCOUNT_TRANSACTIONS_MV;
+import static io.kb.kafkastatementsservice.utils.Constants.*;
 import static io.kb.kafkastatementsservice.utils.KafkaStreamUtils.getReadOnlyKeyValueStore;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -40,6 +40,25 @@ public class AccountTransactionsController {
         (List<TransactionInfo>) store.get(ibanAccount);
     if (CollectionUtils.isEmpty(accountTransactions)) {
       LOG.info("zero transactions for ibanAccount {}", ibanAccount);
+      return new ArrayList<>();
+    }
+    return accountTransactions;
+  }
+
+  @PostMapping(
+      path = "/transactions/{ibanAccount}/month/{monthAndYear}",
+      consumes = APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public List<TransactionInfo> getAccountTransactions(
+      @PathVariable final String ibanAccount, @PathVariable final String monthAndYear) {
+    final ReadOnlyKeyValueStore<String, TransactionInfo> store =
+        getReadOnlyKeyValueStore(factoryBean, STORE_NAME_MONTHLY_ACCOUNT_TRANSACTIONS_MV);
+
+    final List<TransactionInfo> accountTransactions =
+        (List<TransactionInfo>) store.get(ibanAccount + GROUP_BY_DELIMITER + monthAndYear);
+    if (CollectionUtils.isEmpty(accountTransactions)) {
+      LOG.info("zero transactions for ibanAccount {} for MMyyyy {}", ibanAccount, monthAndYear);
       return new ArrayList<>();
     }
     return accountTransactions;

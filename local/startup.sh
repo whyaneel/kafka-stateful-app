@@ -26,6 +26,7 @@ done
 echo "\nCreating Topics ...\n"
 docker exec demo-kafka kafka-topics --zookeeper demo-zookeeper:2182 --create --topic ACCOUNT_TRANSACTIONS --partitions 1 --replication-factor 1 --if-not-exists
 docker exec demo-kafka kafka-topics --zookeeper demo-zookeeper:2182 --create --topic ACCOUNT_TRANSACTIONS_TABLE --partitions 1 --replication-factor 1 --if-not-exists
+docker exec demo-kafka kafka-topics --zookeeper demo-zookeeper:2182 --create --topic MONTHLY_ACCOUNT_TRANSACTIONS_TABLE --partitions 1 --replication-factor 1 --if-not-exists
 
 echo "\nCreating Mock Data ...\n"
 sh mock-data/ACCOUNT_TRANSACTIONS.sh

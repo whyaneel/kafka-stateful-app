@@ -177,7 +177,7 @@ curl -X POST \
           "amount": "85",
           "currency": "CHF",
           "ibanAccount": "CH93-0000-0000-0000-0000-1",
-          "valueDate": "8-06-2022",
+          "valueDate": "08-06-2022",
           "description": "Online payment CHF"
         }
       }, {

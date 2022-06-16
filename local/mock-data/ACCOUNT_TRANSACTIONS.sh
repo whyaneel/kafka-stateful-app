@@ -32,7 +32,7 @@ curl -X POST \
         "key" : "d689043c-71fc-4e43-bd74-5ccfa6b07c94",
         "value": {
           "uniqueIdentifier": "d689043c-71fc-4e43-bd74-5ccfa6b07c94",
-          "amount": "85",
+          "amount": "-85",
           "currency": "CHF",
           "ibanAccount": "CH93-0000-0000-0000-0000-1",
           "valueDate": "06-07-2022",
@@ -53,7 +53,7 @@ curl -X POST \
         "key" : "f4a45a6b-dcf9-45b3-ba82-24296d89e3fe",
         "value": {
           "uniqueIdentifier": "f4a45a6b-dcf9-45b3-ba82-24296d89e3fe",
-          "amount": "85",
+          "amount": "-85",
           "currency": "CHF",
           "ibanAccount": "CH93-0000-0000-0000-0000-1",
           "valueDate": "05-07-2022",
@@ -124,7 +124,7 @@ curl -X POST \
         "key": "a94a8a18-f90d-4892-a0e3-afd1c300b606",
         "value": {
           "uniqueIdentifier": "a94a8a18-f90d-4892-a0e3-afd1c300b606",
-          "amount": "100",
+          "amount": "-100",
           "currency": "GBP",
           "ibanAccount": "CH93-0000-0000-0000-0000-1",
           "valueDate": "15-07-2022",
@@ -154,7 +154,7 @@ curl -X POST \
         "key" : "4b19f7b6-99e5-455d-a6d0-48fbe269cdaf",
         "value": {
           "uniqueIdentifier": "4b19f7b6-99e5-455d-a6d0-48fbe269cdaf",
-          "amount": "85",
+          "amount": "-85",
           "currency": "CHF",
           "ibanAccount": "CH93-0000-0000-0000-0000-1",
           "valueDate": "30-07-2022",

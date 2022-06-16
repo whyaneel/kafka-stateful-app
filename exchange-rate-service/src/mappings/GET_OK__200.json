@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/ok"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "message": "Wiremock is UP & Running"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

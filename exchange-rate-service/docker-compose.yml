@@ -1,0 +1,17 @@
+version: "3"
+services:
+  exchange-rate-service:
+    container_name: exchange-rate-service-mock
+    image: rodolpheche/wiremock
+    networks:
+      - exchangerateservicemock_bridge
+    volumes:
+      - ./src:/home/wiremock
+      - ./extn:/var/wiremock/extensions
+    ports:
+      - 10001:8080
+
+networks:
+  exchangerateservicemock_bridge:
+    name: exchangerateservicemock_bridge
+    driver: bridge

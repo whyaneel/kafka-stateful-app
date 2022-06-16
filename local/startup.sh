@@ -13,7 +13,11 @@ printStep() {
 
 sh kafka-statements-service/compile.sh
 
-cd local
+cd exchange-rate-service
+echo "exchange-rate-service-mock is booting up"
+docker-compose up -d
+
+cd ../local
 docker-compose up -d
 
 echo "\nWaiting for rest proxy to be online (i.e. kafka will also be online) ...\n"
@@ -29,7 +33,7 @@ docker exec demo-kafka kafka-topics --zookeeper demo-zookeeper:2182 --create --t
 docker exec demo-kafka kafka-topics --zookeeper demo-zookeeper:2182 --create --topic MONTHLY_ACCOUNT_TRANSACTIONS_TABLE --partitions 1 --replication-factor 1 --if-not-exists
 
 echo "\nCreating Mock Data ...\n"
-sh mock-data/ACCOUNT_TRANSACTIONS.sh
+sh ../local/mock-data/ACCOUNT_TRANSACTIONS.sh
 
 # Deployment completed beep ;)
 echo -e "\007"

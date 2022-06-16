@@ -109,6 +109,7 @@ services:
       - "5005:5005"
     networks:
       - local_default
+      - exchangerateservicemock_bridge
     environment:
       JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Xms256m -Xmx512m"
       SERVER_PORT: 1025
@@ -120,6 +121,9 @@ services:
       REPLICATION_FACTOR_CONFIG: 1
       STATE_DIR_CONFIG: /tmp/kafka-streams
       NUM_STANDBY_REPLICAS_CONFIG: 1
+      EXCHANGE_RATE_SERVICE_URL: http://exchange-rate-service:8080
 
 networks:
   local_default:
+  exchangerateservicemock_bridge:
+    external: true

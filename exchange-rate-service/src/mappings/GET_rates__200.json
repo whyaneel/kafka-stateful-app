@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/rates"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": [
+      {
+        "currency": "GBP",
+        "quoteCurrency": "CHF",
+        "rate": "1.190101"
+      },
+      {
+        "currency": "EUR",
+        "quoteCurrency": "CHF",
+        "rate": "1.020101"
+      }
+    ],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

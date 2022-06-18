@@ -9,6 +9,8 @@ public class PageableTransactionResponse {
   private List<TransactionInfo> transactions = new ArrayList<>();
   private BigDecimal totalCredit = BigDecimal.ZERO;
   private BigDecimal totalDebit = BigDecimal.ZERO;
+  
+  //TODO Pageable info (pageNo, pageSize, total)
 
   public List<TransactionInfo> getTransactions() {
     return transactions;

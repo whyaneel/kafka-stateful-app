@@ -5,7 +5,7 @@ import io.kb.kafkastatementsservice.model.PageableTransactionResponse;
 import io.kb.kafkastatementsservice.model.TransactionInfo;
 import io.kb.kafkastatementsservice.service.CalculatorService;
 import io.kb.kafkastatementsservice.service.ExchangeRateService;
-import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
+import io.kb.kafkastatementsservice.service.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,45 +18,46 @@ import java.util.List;
 import java.util.Map;
 
 import static io.kb.kafkastatementsservice.utils.Constants.*;
-import static io.kb.kafkastatementsservice.utils.KafkaStreamUtils.getReadOnlyKeyValueStore;
+import static io.kb.kafkastatementsservice.utils.KafkaStreamUtils.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(path = "/statements/v1/", produces = APPLICATION_JSON_VALUE)
+@RequestMapping(path = API_CONTEXT + VERSION, produces = APPLICATION_JSON_VALUE)
 public class AccountTransactionsController {
   private static final Logger LOG = LoggerFactory.getLogger(AccountTransactionsController.class);
 
   private final StreamsBuilderFactoryBean factoryBean;
   private final CalculatorService calculatorService;
   private final ExchangeRateService exchangeRateService;
+  private final JwtService jwtService;
 
   @Autowired
   public AccountTransactionsController(
       StreamsBuilderFactoryBean factoryBean,
       CalculatorService calculatorService,
-      ExchangeRateService exchangeRateService) {
+      ExchangeRateService exchangeRateService,
+      JwtService jwtService) {
     this.factoryBean = factoryBean;
     this.calculatorService = calculatorService;
     this.exchangeRateService = exchangeRateService;
+    this.jwtService = jwtService;
   }
 
-  @PostMapping(path = "/transactions/{ibanAccount}", consumes = APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/transactions", produces = APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   public PageableTransactionResponse getAccountTransactions(
-      @PathVariable final String ibanAccount) {
-    final ReadOnlyKeyValueStore<String, TransactionInfo> store =
-        getReadOnlyKeyValueStore(factoryBean, STORE_NAME_ACCOUNT_TRANSACTIONS_MV);
-
+      @RequestHeader(value = "Authorization") final String bearerToken) {
+    final String ibanAccount =
+        getAccount(jwtService.getId(bearerToken.substring(BEARER_TOKEN_PREFIX.length())));
     final List<TransactionInfo> accountTransactions =
-        (List<TransactionInfo>) store.get(ibanAccount);
+        getAllTransactionInfo(factoryBean, ibanAccount);
     if (CollectionUtils.isEmpty(accountTransactions)) {
       LOG.info("zero transactions for ibanAccount {}", ibanAccount);
       return PageableTransactionResponse.PageableTransactionResponseBuilder
           .aPageableTransactionResponse()
           .build();
     }
-
     Map<String, ExchangeRate> exchangeRateMap = exchangeRateService.exchangeRates();
     return PageableTransactionResponse.PageableTransactionResponseBuilder
         .aPageableTransactionResponse()
@@ -66,18 +67,16 @@ public class AccountTransactionsController {
         .build();
   }
 
-  @PostMapping(
-      path = "/transactions/{ibanAccount}/month/{monthAndYear}",
-      consumes = APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/transactions/month/{monthAndYear}", produces = APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   public PageableTransactionResponse getAccountTransactions(
-      @PathVariable final String ibanAccount, @PathVariable final String monthAndYear) {
-    final ReadOnlyKeyValueStore<String, TransactionInfo> store =
-        getReadOnlyKeyValueStore(factoryBean, STORE_NAME_MONTHLY_ACCOUNT_TRANSACTIONS_MV);
-
+      @PathVariable final String monthAndYear,
+      @RequestHeader(value = "Authorization") final String bearerToken) {
+    final String ibanAccount =
+        getAccount(jwtService.getId(bearerToken.substring(BEARER_TOKEN_PREFIX.length())));
     final List<TransactionInfo> accountTransactions =
-        (List<TransactionInfo>) store.get(ibanAccount + GROUP_BY_DELIMITER + monthAndYear);
+        getMonthlyTransactionInfo(factoryBean, monthAndYear, ibanAccount);
     if (CollectionUtils.isEmpty(accountTransactions)) {
       LOG.info("zero transactions for ibanAccount {} for MMyyyy {}", ibanAccount, monthAndYear);
       return PageableTransactionResponse.PageableTransactionResponseBuilder

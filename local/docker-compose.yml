@@ -122,6 +122,8 @@ services:
       STATE_DIR_CONFIG: /tmp/kafka-streams
       NUM_STANDBY_REPLICAS_CONFIG: 1
       EXCHANGE_RATE_SERVICE_URL: http://exchange-rate-service:8080
+      JWT_SECRET_KEY: SECRET_KEY_ANIL
+      JWT_VALIDITY_MILLIS: 60000
 
 networks:
   local_default:

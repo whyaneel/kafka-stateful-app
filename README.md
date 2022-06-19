@@ -1,8 +1,30 @@
 # Use Case
 For an e-Banking Portal, implement a REST API for returning list of transactions created in an arbitrary calendar month for a given customer who is logged-on in the portal. The list of transactions should be consumed from a Kafka topic. 
 
-Build a Docker image out of the application and prepare the configuration for deploying it to Kubernetes / OpenShift.
+# Assumptions
+- Focus:
+    - Secure API + JWT
+    - Data Access
+    - Unit Tests
+    - Zookeeper, Kafka  (Single Node Cluster)
+    - Kafka Streams, Java8, Spring, Wiremock
+    - Produce Transactions with Rest Proxy (externalise)
+- Not In Scope:
+    - Authentication Source: Hard Coded. Accept any user with password "bar", for simplicity (See mappings to get UniqueId & Account)
+    - Ref Data Source: Hard Coded. In Ideal Case, UniqueId varies dynamically per user, may be encrypted
+    - Ref Data Source: Hard Coded. For simplicity considering Single Account per UniqueId
+    
+    
+# Big Picture
 
+### Context Diagram
+![Context Diagram](https://github.com/whyaneel/kafka-stateful-app/blob/master/readme/context-diagram.png?raw=true)
+
+### Component Diagram
+![Component Diagram](https://github.com/whyaneel/kafka-stateful-app/blob/master/readme/component-diagram.png?raw=true)
+
+### Secure API with JWT
+![SecureAPI_withJWT](https://github.com/whyaneel/kafka-stateful-app/blob/master/readme/secure-api-with-jwt.png?raw=true)
 
 # Setup
 
@@ -157,7 +179,7 @@ curl -X GET 'localhost:1025/api/statements/v1/transactions/month/072022' \
 ```shell script
 curl -X GET 'localhost:1025/api/statements/v1/transactions' \
 -H 'Content-Type: application/json' \
--H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmb28iLCJleHAiOjE2NTU1NjkwMjYsImlhdCI6MTY1NTU2ODk2NiwianRpIjoiUC0wMTIzNDU2Nzg5In0.EwiAn0kKOiKXXHns1gvsb9ATuEY3NzTyw3mjSRLAGN0'
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbmlsIiwiZXhwIjoxNjU1NTcxMTMzLCJpYXQiOjE2NTU1NzEwNzMsImp0aSI6IlAtMDEyMzQ1Njc4OSJ9.rxd-LjvDk8GdhG5ys9cDU5w-UFrHU0fW3KndHYAiU5s'
 ```
 
 #### 6. If JWT Expired or It's Integrity can't be verified will output 401 Unauthorised
